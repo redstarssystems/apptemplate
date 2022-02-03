@@ -1,0 +1,11 @@
+{:rules              {:indentation {:indents {#".*" [[:inner 0]]}},
+                      :blank-lines {:trim-consecutive? false :max-consecutive 3}
+                      :comments    {:leading-prefix ""     ;; don't change all comments to strictly ;;
+                                    :inline-prefix  "; "}
+                      :types       {:enabled? false}
+                      :namespaces  {:import-break-width 120}}
+
+ :align-associative? true
+
+ :files              {:ignore #{".clj-kondo" ".idea" ".cpcache" "target" ".git"}}
+}

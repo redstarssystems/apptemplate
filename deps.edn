@@ -1,0 +1,34 @@
+{
+ :mvn/repos {"clojars" {:url "https://repo.clojars.org/"}
+             "central" {:url "https://repo1.maven.org/maven2/"}}
+
+ :paths     ["src" "resources"]
+
+ :deps      {org.clojure/clojure {:mvn/version "1.10.3"}}
+
+ :aliases   {
+             :repl     {:extra-deps  {nrepl/nrepl          {:mvn/version "0.9.0"}
+                                      healthsamurai/matcho {:mvn/version "0.3.9"}
+                                      criterium/criterium  {:mvn/version "0.4.6"}
+                                      hashp/hashp          {:mvn/version "0.2.1"}}
+                        :extra-paths ["dev/src" "resources" "test"]
+                        :jvm-opts    []
+                        :main-opts   ["--main" "nrepl.cmdline"]}
+
+             :test     {:extra-deps  {org.clojure/test.check          {:mvn/version "1.1.1"}
+                                      healthsamurai/matcho            {:mvn/version "0.3.9"}
+                                      lambdaisland/kaocha             {:mvn/version "1.60.977"}
+                                      io.github.seancorfield/deps-new {:git/tag "v0.4.9" :git/sha "ba30a76"}
+                                      lambdaisland/kaocha-cloverage   {:mvn/version "1.0.75"}}
+                        :extra-paths ["resources" "test" "test/resources"]
+                        :jvm-opts    []
+                        :main-opts   ["--main" "kaocha.runner"]}
+
+             :build    {:deps       {io.github.seancorfield/build-clj {:git/tag "v0.6.7" :git/sha "22c2d09"}}
+                        :ns-default build}
+
+             ;; slf4j-nop is required to suppress warning about "org.slf4j.impl.StaticLoggerBinder"
+             :outdated {:extra-deps {com.github.liquidz/antq {:mvn/version "1.4.0"}
+                                     org.slf4j/slf4j-nop {:mvn/version "1.7.35"}}
+                        :main-opts  ["-m" "antq.core"]}
+             }}

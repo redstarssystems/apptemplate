@@ -1,0 +1,29 @@
+;; Project configuration should be in 'tasks/build/config.clj' file.
+;; Internal constants and helper functions for tasks should be in 'tasks/build/init.clj' file.
+;; All babashka tasks should be implemented as functions in 'tasks/build/tasks.clj' file.
+
+;; This file should be as minimal as possible.
+
+{:min-bb-version "0.4.0"
+
+ :deps           {local/deps {:local/root "tasks/"}}
+
+ :tasks
+ {:enter       (build.init/enter current-task)
+  :leave       (build.init/leave current-task)
+
+  clean        build.tasks/clean
+  build        build.tasks/build
+  run          build.tasks/run
+  install      build.tasks/install
+  deploy       build.tasks/deploy
+  test         build.tasks/test
+  repl         build.tasks/repl
+  outdated     build.tasks/outdated
+  outdated:fix build.tasks/outdated-fix
+  format       build.tasks/format
+  lint         build.tasks/lint
+  standalone   build.tasks/standalone
+  requirements build.tasks/requirements
+
+  }}

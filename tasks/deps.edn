@@ -1,0 +1,12 @@
+;; This file should be as minimal as possible.
+;; The purpose of this file is to run babashka REPL for task debugging.
+;; There is no deps for Java, so :deps value intentionally left blank.
+{
+ :paths     ["src"]
+
+ :deps      {}
+
+ ;; to run REPL use command `bb repl`, which should be run in this folder
+ ;; then connect to Babashka nREPL server using your favorite IDE
+
+ }

@@ -1,0 +1,51 @@
+# standard (default) exclusions
+/target
+/classes
+/checkouts
+*.jar
+*.class
+*.xml.asc
+/.cpcache
+/.lein-*
+/.nrepl-history
+/.nrepl-port
+.hgignore
+.hg/
+.cpcache
+
+# exclude all .idea except some subfolders
+.idea/*
+!.idea/clojure-deps.xml
+!.idea/codeStyles/
+!.idea/copyright/
+*.iml
+
+# exclude whole folders with logs
+log
+logs
+
+# exclude clj-kondo files except config
+.clj-kondo/*
+!*.clj-kondo/config.edn
+
+# exclude files of Calva, Eclipse, Leiningen, clojure-lsp, nrepl and other tools
+.calva/output-window/
+.classpath
+.clj-kondo/.cache
+.eastwood
+.factorypath
+.java-version
+.lein-*
+.lsp/.cache
+.lsp/sqlite.db
+.nrepl-history
+.nrepl-port
+.project
+.rebel_readline_history
+.settings
+.socket-repl-port
+.sw*
+.vscode
+*.swp
+*~
+trace.edn

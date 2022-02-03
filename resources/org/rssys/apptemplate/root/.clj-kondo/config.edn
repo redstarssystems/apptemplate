@@ -1,0 +1,21 @@
+{:output        {:exclude-files ["target/*"]}
+
+ :linters       {:consistent-alias
+                 {:aliases {clojure.string   string}}
+
+                 :unresolved-namespace
+                 {:exclude [user criterium.core config.edn]}
+
+                 :unresolved-symbol
+                 {:exclude [(cljs.test/are [thrown? thrown-with-msg?])
+                            (cljs.test/is [thrown? thrown-with-msg?])
+                            (clojure.test/are [thrown? thrown-with-msg?])
+                            (clojure.test/is [thrown? thrown-with-msg?])]}
+
+                 :unsorted-required-namespaces
+                 {:level :warning}
+
+                 :unused-referred-var
+                 {:exclude {clojure.test [is deftest testing use-fixtures]}}}
+
+ :skip-comments true}

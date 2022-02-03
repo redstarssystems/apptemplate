@@ -1,0 +1,8 @@
+# exclude all .idea
+.idea
+
+# exclude clj-kondo
+.clj-kondo
+
+# exclude target
+target
