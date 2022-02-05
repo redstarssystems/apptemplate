@@ -1,7 +1,8 @@
 (ns build.config
   "Project configuration"
   (:require
-    [build.init :refer [safe-exec current-date prf current-timestamp]]))
+    [clojure.string :as string]
+    [build.init :refer [safe-exec current-date-struc prf current-timestamp]]))
 
 
 ;;;;;;;;;;;;;;;;;
@@ -15,7 +16,6 @@
 (def artifact '{{group/id}}/{{artifact/id}})
 
 (def main-ns '{{top/ns}}.{{main/ns}})
-(def artifact-version "{{version}}")
 
 (def target-folder "target")
 (def release-branches #{"master"})
@@ -26,18 +26,21 @@
   "Calculate project environment and config values.
   Returns map which will be used for merge with ENV vars."
   []
-  (println "Ignore git errors if there is no fully initialized git repo.\n")
-  (let [git-branch (safe-exec "git rev-parse --abbrev-ref HEAD")
-        release?   (contains? release-branches git-branch)]
+  (let [version-prefix (let [p (-> "VERSION_PREFIX" slurp string/trim)] (if (string/blank? p) "0" p))
+        git-branch (safe-exec "git rev-parse --abbrev-ref HEAD" false)
+        git-rev-count (safe-exec "git rev-list HEAD --count" false)
+        release?   (contains? release-branches git-branch)
+        version-suffix (let [s (or git-rev-count "0")] (if release? s (str s "-SNAPSHOT")))
+        artifact-version (format "%s.%s" version-prefix version-suffix)]
     {:target-folder       target-folder
      :release-branches    release-branches
      :deployable-branches deployable-branches
-     :build-time          (current-date)
+     :build-time          (current-date-struc)
      :build-timestamp     current-timestamp
-     :git-url             (safe-exec "git config --get remote.origin.url")
+     :git-url             (safe-exec "git config --get remote.origin.url" false)
      :git-branch          git-branch
-     :git-sha             (safe-exec "git rev-parse --short HEAD")
-     :git-rev-count       (safe-exec "git rev-list HEAD --count")
+     :git-sha             (safe-exec "git rev-parse --short HEAD" false)
+     :git-rev-count       git-rev-count
      :release?            release?
      :snapshot?           (not release?)
      :deployable?         (contains? deployable-branches git-branch)

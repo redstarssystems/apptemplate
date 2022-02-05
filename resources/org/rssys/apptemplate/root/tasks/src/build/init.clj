@@ -31,13 +31,14 @@
 (def current-timestamp (System/currentTimeMillis))
 
 
-(defn current-date
+(defn current-date-struc
   []
-  (.format
-    (LocalDateTime/ofInstant
-      (Instant/ofEpochMilli current-timestamp)
-      (ZoneId/systemDefault))
-    date-formatter))
+  (let [inst-now (LocalDateTime/ofInstant
+                   (Instant/ofEpochMilli current-timestamp)
+                   (ZoneId/systemDefault))]
+    {:formatted (.format inst-now date-formatter)
+     :timestamp current-timestamp
+     :year      (.getYear inst-now)}))
 
 
 (defn prf
@@ -57,24 +58,27 @@
 
 
 (defn safe-exec
-  "Execute command ignoring bad exit codes and put its output to a string."
-  [cmd]
-  (try (exec cmd)
-       (catch Exception e (prf "command failed: '%s', error message: '%s'" cmd (.getMessage e)))))
+  "Execute command ignoring bad exit codes and put its output to a string if success. Returns nil if error."
+  ([cmd] (safe-exec cmd true))
+  ([cmd print-errors?]
+   (try (exec cmd)
+        (catch Exception e
+          (when print-errors?
+            (prf "command failed: '%s', error message: '%s'" cmd (.getMessage e)))))))
 
 
 (defn enter
   "This hook is executed before each task."
   [current-task-fn]
   (let [{:keys [name]} (current-task-fn)]
-    (prf "%s[ ] %s %s%s" ansi-yellow name (current-date) ansi-reset)))
+    (prf "%s[ ] %s %s%s" ansi-yellow name (:formatted (current-date-struc)) ansi-reset)))
 
 
 (defn leave
   "This hook is executed after each task."
   [current-task-fn]
   (let [{:keys [name]} (current-task-fn)]
-    (prf "%s[✔]︎ %s %s%s" ansi-green name (current-date) ansi-reset)))
+    (prf "%s[✔]︎ %s %s%s" ansi-green name (:formatted (current-date-struc)) ansi-reset)))
 
 
 (defn run-bb-nrepl-server

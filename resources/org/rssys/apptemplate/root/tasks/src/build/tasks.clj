@@ -6,7 +6,7 @@
     [babashka.tasks]
     [babashka.wait :as wait]
     [build.config :as config]
-    [build.init :as init]
+    [build.init :as init :refer [prf]]
     [clojure.string :as string]
     [taoensso.timbre :as timbre]))
 
@@ -26,7 +26,9 @@
   "Build standalone executable uberjar file"
   [& _]
   (fs/create-dirs config/target-folder)
-  (babashka.tasks/shell {:extra-env (config/get-project-env)} (str "clojure -T:build uberjar")))
+  (let [extra-env (config/get-project-env)]
+    (prf "\nBuilding version: %s\n" (:artifact-version extra-env) )
+    (babashka.tasks/shell {:extra-env extra-env} (str "clojure -T:build uberjar"))))
 
 
 (defn run

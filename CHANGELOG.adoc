@@ -1,5 +1,8 @@
 = Change Log
 
-== [0.1.0] - 02-02-2022
+== [0.1.0] - unpublished
 
-Initial release.
+- implement common tasks for application development;
+- all `babashka` tasks implemented in _tasks_ folder in _clj_ files.
+It allows debug tasks in `babashka` REPL, format & lint code, code completion, doc highlighting;
+- add `VERSION_PREFIX` file for app version control.

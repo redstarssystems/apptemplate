@@ -1,6 +1,7 @@
 (ns build
   (:refer-clojure :exclude [test])
   (:require [org.corfield.build :as bb]
+            [clojure.edn]
             [clojure.pprint :as pprint]))
 
 
@@ -9,8 +10,7 @@
                   :artifact            (symbol (System/getenv "artifact"))
                   :main-ns             (symbol (System/getenv "main-ns"))
                   :artifact-version    (System/getenv "artifact-version")
-                  :build-time          (System/getenv "build-time")
-                  :build-timestamp     (Long/parseLong (System/getenv "build-timestamp"))
+                  :build-time          (clojure.edn/read-string (System/getenv "build-time"))
                   :target-folder       (System/getenv "target-folder")
                   :release-branches    (System/getenv "release-branches")
                   :deployable-branches (System/getenv "deployable-branches")
