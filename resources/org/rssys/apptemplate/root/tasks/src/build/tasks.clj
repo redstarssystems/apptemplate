@@ -27,7 +27,7 @@
   [& _]
   (fs/create-dirs config/target-folder)
   (let [extra-env (config/get-project-env)]
-    (prf "\nBuilding version: %s\n" (:artifact-version extra-env) )
+    (prf "\nBuilding version: %s\n" (:artifact-version extra-env))
     (babashka.tasks/shell {:extra-env extra-env} (str "clojure -T:build uberjar"))))
 
 
@@ -91,29 +91,34 @@
     (do
       (println "jlink is not installed. Please, install JDK jmod package.\n")
       (System/exit 1))
-    (let [project-config    (config/get-project-env)
-          bundle-name       (clojure.core/format "%s-%s" (:artifact-id project-config) (:artifact-version project-config))
-          bundle-path       (clojure.core/format "%s/%s" (:target-folder project-config) bundle-name)
+    (let [{:keys [group-id artifact-id artifact-version target-folder]} (config/get-project-env)
+          bundle-name       (clojure.core/format "%s-%s" artifact-id artifact-version)
+          bundle-path       (clojure.core/format "%s/%s" target-folder bundle-name)
           bundle-jvm-params "-Xmx1g"
           script-body       (clojure.core/format "#!/bin/sh\n\nbin/java %s -cp .:./lib/* %s.%s"
                               bundle-jvm-params
-                              (string/replace (str (:group-id project-config)) (re-pattern "-") "_") ;; Java class should not contain dashes
-                              (string/replace (str (:artifact-id project-config)) (re-pattern "-") "_"))
-          script-file       (clojure.core/format "%s/start.sh" bundle-path)]
+                              (string/replace (str group-id) (re-pattern "-") "_") ;; Java class should not contain dashes
+                              (string/replace (str artifact-id) (re-pattern "-") "_"))
+          script-file       (clojure.core/format "%s/start.sh" bundle-path)
+          archive-name      (clojure.core/format "%s/%s-%s.tar.gz" target-folder artifact-id artifact-version)
+          jlink-modules     "java.sql,java.management,jdk.management,java.desktop,java.naming,jdk.unsupported"
+          jlink-opts        "--strip-debug --compress 2 --no-header-files --no-man-pages"]
       (println "Create bundle to" bundle-path)
       (fs/delete-tree bundle-path)
-      (do (init/prf "Building Uberjar...") (build))
-      (babashka.tasks/shell (clojure.core/format "jlink --output %s --add-modules java.sql,java.management,jdk.management,java.desktop,java.naming,jdk.unsupported --strip-debug --compress 2 --no-header-files --no-man-pages" bundle-path))
-      (babashka.tasks/shell (clojure.core/format "cp %s %s/lib/" (str (:target-folder project-config) "/"
-                                                                   (:artifact-id project-config) "-"
-                                                                   (:artifact-version project-config)
-                                                                   ".jar")
+      (build)
+      (prf "Creating bundle: %s ..." bundle-name)
+      (prf "JVM params for %s:\t[ %s ]" script-file bundle-jvm-params)
+      (prf "jlink modules:\t[ %s ]" jlink-modules)
+      (prf "jlink opts:\t[ %s ]" jlink-opts)
+      (babashka.tasks/shell (clojure.core/format "jlink --output %s --add-modules %s %s" bundle-path jlink-modules jlink-opts))
+      (babashka.tasks/shell (clojure.core/format "cp %s %s/lib/" (str target-folder "/" artifact-id "-" artifact-version ".jar")
                               bundle-path))
       (spit script-file script-body)
       (babashka.tasks/shell (clojure.core/format "chmod +x %s" script-file))
-      (babashka.tasks/shell (clojure.core/format "tar cvfz %s/%s-%s.tar.gz -C %s %s" (:target-folder project-config)
-                              (:artifact-id project-config) (:artifact-version project-config)
-                              (:target-folder project-config) bundle-name)))))
+      (init/exec (clojure.core/format "tar cvfz %s -C %s %s" archive-name target-folder bundle-name))
+      (prn)
+      (prf "Created bundle: %s" bundle-name)
+      (prf "Compressed bundle archive: %s" archive-name))))
 
 
 (defn requirements
