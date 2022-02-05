@@ -5,4 +5,5 @@
 - implement common tasks for application development;
 - all `babashka` tasks implemented in _tasks_ folder in _clj_ files.
 It allows debug tasks in `babashka` REPL, format & lint code, code completion, doc highlighting;
-- add `VERSION_PREFIX` file for app version control.
+- add `VERSION_PREFIX` file for app version control;
+- add compile java sources, `javac` command.

@@ -2,7 +2,7 @@
  :mvn/repos {"clojars" {:url "https://repo.clojars.org/"}
              "central" {:url "https://repo1.maven.org/maven2/"}}
 
- :paths     ["src" "resources"]
+ :paths     ["src" "resources" "java-src" "target/classes"]
 
  :deps      {org.clojure/clojure    {:mvn/version "1.10.3"}
              org.clojure/test.check {:mvn/version "1.1.0"}
@@ -28,7 +28,6 @@
                         :extra-paths ["resources" "test" "test/resources"]
                         :jvm-opts    []
                         :main-opts   ["--main" "kaocha.runner"]}
-
 
              :build    {:deps       {io.github.seancorfield/build-clj {:git/tag "v0.6.7" :git/sha "22c2d09"}}
                         :ns-default build}

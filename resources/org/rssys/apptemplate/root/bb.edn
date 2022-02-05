@@ -23,6 +23,7 @@
   outdated:fix build.tasks/outdated-fix
   format       build.tasks/format
   lint         build.tasks/lint
+  javac        build.tasks/javac-compile
   standalone   build.tasks/standalone
   requirements build.tasks/requirements
 

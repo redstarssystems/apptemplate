@@ -22,10 +22,20 @@
   (fs/create-dir config/target-folder))
 
 
+(defn javac-compile
+  "Compile java sources"
+  [& _]
+  (let [extra-env (config/get-project-env)]
+    (if (:compile-java-sources? extra-env)
+      (babashka.tasks/shell {:extra-env extra-env} (str "clojure -T:build javac"))
+      (println "Compile java sources is disabled in `config.clj`"))))
+
+
 (defn build
   "Build standalone executable uberjar file"
   [& _]
   (fs/create-dirs config/target-folder)
+  (javac-compile)
   (let [extra-env (config/get-project-env)]
     (prf "\nBuilding version: %s\n" (:artifact-version extra-env))
     (babashka.tasks/shell {:extra-env extra-env} (str "clojure -T:build uberjar"))))
@@ -34,6 +44,7 @@
 (defn run
   "Run application (-main function)"
   [& args]
+  (javac-compile)
   (babashka.tasks/clojure (str "-M:run " (apply str (interpose " " args)))))
 
 
@@ -52,12 +63,14 @@
 (defn test
   "Run project tests"
   [& args]
+  (javac-compile)
   (babashka.tasks/shell (str "clojure -M:test " (apply str (interpose " " args)))))
 
 
 (defn repl
   "Run Clojure repl"
   [& args]
+  (javac-compile)
   (babashka.tasks/clojure (str "-M:repl " (apply str (interpose " " args)))))
 
 
@@ -83,6 +96,7 @@
   [& _]
   (babashka.tasks/shell "clj-kondo --parallel --lint src:test:dev/src")
   (babashka.tasks/shell "cljstyle check"))
+
 
 (defn standalone
   "Create a standalone application with bundled JDK (using jlink, JDK 9+)"
