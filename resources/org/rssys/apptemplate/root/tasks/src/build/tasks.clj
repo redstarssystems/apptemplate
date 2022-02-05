@@ -28,14 +28,14 @@
   (let [extra-env (config/get-project-env)]
     (if (:compile-java-sources? extra-env)
       (babashka.tasks/shell {:extra-env extra-env} (str "clojure -T:build javac"))
-      (println "Compile java sources is disabled in `config.clj`"))))
+      (println "Compile java sources is disabled in `config.clj`. See flag `compile-java-sources?`"))))
 
 
 (defn build
   "Build standalone executable uberjar file"
   [& _]
   (fs/create-dirs config/target-folder)
-  (javac-compile)
+  (when (:compile-java-sources? (config/get-project-env)) (javac-compile))
   (let [extra-env (config/get-project-env)]
     (prf "\nBuilding version: %s\n" (:artifact-version extra-env))
     (babashka.tasks/shell {:extra-env extra-env} (str "clojure -T:build uberjar"))))
@@ -44,7 +44,7 @@
 (defn run
   "Run application (-main function)"
   [& args]
-  (javac-compile)
+  (when (:compile-java-sources? (config/get-project-env)) (javac-compile))
   (babashka.tasks/clojure (str "-M:run " (apply str (interpose " " args)))))
 
 
@@ -63,14 +63,14 @@
 (defn test
   "Run project tests"
   [& args]
-  (javac-compile)
+  (when (:compile-java-sources? (config/get-project-env)) (javac-compile))
   (babashka.tasks/shell (str "clojure -M:test " (apply str (interpose " " args)))))
 
 
 (defn repl
   "Run Clojure repl"
   [& args]
-  (javac-compile)
+  (when (:compile-java-sources? (config/get-project-env)) (javac-compile))
   (babashka.tasks/clojure (str "-M:repl " (apply str (interpose " " args)))))
 
 

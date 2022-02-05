@@ -52,16 +52,3 @@
               :javac-opts javac-opts})
     (println "Java sources compiled successfully to folder:" class-dir)))
 
-(defn install
-  "Install the JAR locally."
-  [opts]
-  (-> opts
-    (assoc :lib (:artifact project-env) :version (:artifact-version project-env))
-    (bb/install)))
-
-(defn deploy
-  "Deploy the JAR to Clojars."
-  [opts]
-  (-> opts
-    (assoc :lib (:artifact project-env) :version (:artifact-version project-env))
-    (bb/deploy)))
