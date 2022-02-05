@@ -1,6 +1,4 @@
-== Application project template
-:Author:            Mike Ananev
-:Date:              30/01/2022
+== {{name}}
 :git:               https://git-scm.com[git]
 :clojure-deps-cli:  https://clojure.org/guides/getting_started[clojure deps cli]
 :tools-build:       https://clojure.org/guides/tools_build[tools-build]
@@ -9,25 +7,23 @@
 :babashka:          https://github.com/babashka/babashka[babashka]
 :toc:
 
-=== Intro
+Project {{name}} generated from https://github.com/redstarssystems/apptemplate[Application project template].
 
-This `template` helps you to quick start new app project using {clojure-deps-cli} and {deps-new}.
+=== Project workflow
 
-This `template` provides:
+To configure project workflow use scripts: `tasks/src/*`, `bb.edn` and `build.clj`.
 
-- project control using {babashka} tasks;
-- building Clojure project using {tools-build};
-- editor configuration via `.editorconfig` file;
-- configured `clj-kondo` linter;
-- configured `cljstyle` formatter;
-- run tests using https://github.com/lambdaisland/kaocha[kaocha].
+IMPORTANT: `tasks/src/*` only for Babashka tasks code. +
+`bb.edn` file should be as minimal as possible.
 
-This template will give you the following basic project workflow:
+- `tasks/src/build/config.clj` - for project configuration;
+- `tasks/src/build/init.clj` - for tasks internal constants and helpers;
+- `tasks/src/build/tasks.clj` - for tasks code.
+
+Run `bb tasks` to show help for project workflow. The following tasks are available:
+
 [source, bash]
 ----
-mike@mbp02 ✗ bb tasks
-The following tasks are available:
-
 clean        Clean target folder
 build        Build standalone executable uberjar file
 run          Run application (-main function)
@@ -43,41 +39,6 @@ javac        Compile java sources
 standalone   Create a standalone application with bundled JDK (using jlink, JDK 9+)
 requirements Install project requirements
 ----
-
-See also:
-
-* https://github.com/redstarssystems/libtemplate[Library project template]
-
-== Usage
-
-Before run this template ensure you have installed {deps-new} and {babashka} (see <<install-prerequisites>> ). +
-
-Example: to generate new app project for artifact `com.example/app01` run:
-
-[source, bash]
-----
-clojure -Sdeps '{:deps {org.rssys/apptemplate {:git/tag "0.1.0" :git/sha "" :git/url "https://github.com/redstarssystems/apptemplate.git"}}}' -Tnew create :template org.rssys/apptemplate :name com.example/app01
-
-----
-or clone this project and run from its folder:
-
-[source, bash]
-----
-clojure -Sdeps '{:deps {org.rssys/apptemplate {:local/root "."}}}' -Tnew create :template org.rssys/apptemplate :name com.example/app01 :target-dir ../app01
-
-----
-
-NOTE: Please, see `README.adoc` in a root folder of created project.
-
-To configure project workflow use scripts: `tasks/src/*`, `bb.edn` and `build.clj`.
-
-IMPORTANT: `tasks/src/*` only for Babashka tasks code. +
-`bb.edn` file should be as minimal as possible.
-
-- `tasks/src/build/config.clj` - for project configuration;
-- `tasks/src/build/init.clj` - for tasks internal constants and helpers;
-- `tasks/src/build/tasks.clj` - for tasks code.
-
 
 [#install-prerequisites]
 === Install prerequisites
@@ -126,7 +87,16 @@ brew install borkdude/brew/babashka
 sudo bash < <(curl -s https://raw.githubusercontent.com/babashka/babashka/master/install)
 ----
 
-== License
+. Run once:
++
+[source,bash]
+----
+bb requirements
+----
+to install other necessary tools (MacOS only, for Linux manual instruction).
 
-Copyright © 2021 {Author} +
+
+=== License
+
+Copyright © 2021 {{user}} +
 Distributed under the Eclipse Public License 1.0 or (at your option) any later version.
