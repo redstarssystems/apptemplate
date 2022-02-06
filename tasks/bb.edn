@@ -3,7 +3,7 @@
  :deps {local/deps {:local/root "."}}
  :tasks
  {
-  ;; To run babashka nREPL server use command `bb repl` in current folder, which should be run in this folder.
+  ;; To run babashka nREPL server use command `bb repl`, which should be run in this folder.
   ;; Then connect to nREPL server using your favorite IDE
   ;; Use this REPL to debug tasks only!
   repl build.init/run-bb-nrepl-server
