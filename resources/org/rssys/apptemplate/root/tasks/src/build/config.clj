@@ -33,12 +33,13 @@
         git-rev-count    (safe-exec "git rev-list HEAD --count" false)
         release?         (contains? release-branches git-branch)
         version-suffix   (let [s (or git-rev-count "0")] (if release? s (str s "-SNAPSHOT")))
-        artifact-version (format "%s.%s" version-prefix version-suffix)]
+        artifact-version (format "%s.%s" version-prefix version-suffix)
+        t                (current-timestamp)]
     {:target-folder         target-folder
      :release-branches      release-branches
      :deployable-branches   deployable-branches
-     :build-time            (current-date-struc)
-     :build-timestamp       current-timestamp
+     :build-time            (current-date-struc t)
+     :build-timestamp       t
      :git-url               (safe-exec "git config --get remote.origin.url" false)
      :git-branch            git-branch
      :git-sha               (safe-exec "git rev-parse --short HEAD" false)

@@ -19,12 +19,13 @@
   []
   (println "Ignore git errors if there is no fully initialized git repo.\n")
   (let [git-branch (safe-exec "git rev-parse --abbrev-ref HEAD")
-        release? (contains? release-branches git-branch)]
+        release? (contains? release-branches git-branch)
+        t (current-timestamp)]
     {:target-folder target-folder
      :release-branches release-branches
      :deployable-branches deployable-branches
-     :build-time  (current-date)
-     :build-timestamp current-timestamp
+     :build-time  (current-date t)
+     :build-timestamp t
      :git-url     (safe-exec "git config --get remote.origin.url")
      :git-branch  git-branch
      :git-sha     (safe-exec "git rev-parse --short HEAD")

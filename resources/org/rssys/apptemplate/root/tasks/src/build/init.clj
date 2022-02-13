@@ -28,16 +28,16 @@
 (def ansi-reset "\u001B[0m")
 (def ansi-yellow "\u001B[33m")
 (def date-formatter (DateTimeFormatter/ofPattern "yyyy-MM-dd HH:mm:ss"))
-(def current-timestamp (System/currentTimeMillis))
+(defn current-timestamp [] (System/currentTimeMillis))
 
 
 (defn current-date-struc
-  []
+  [t]
   (let [inst-now (LocalDateTime/ofInstant
-                   (Instant/ofEpochMilli current-timestamp)
+                   (Instant/ofEpochMilli t)
                    (ZoneId/systemDefault))]
     {:formatted (.format inst-now date-formatter)
-     :timestamp current-timestamp
+     :timestamp t
      :year      (.getYear inst-now)}))
 
 
@@ -71,14 +71,14 @@
   "This hook is executed before each task."
   [current-task-fn]
   (let [{:keys [name]} (current-task-fn)]
-    (prf "%s[ ] %s %s%s" ansi-yellow name (:formatted (current-date-struc)) ansi-reset)))
+    (prf "%s[ ] %s %s%s" ansi-yellow name (:formatted (current-date-struc (current-timestamp))) ansi-reset)))
 
 
 (defn leave
   "This hook is executed after each task."
   [current-task-fn]
   (let [{:keys [name]} (current-task-fn)]
-    (prf "%s[✔]︎ %s %s%s" ansi-green name (:formatted (current-date-struc)) ansi-reset)))
+    (prf "%s[✔]︎ %s %s%s" ansi-green name (:formatted (current-date-struc (current-timestamp))) ansi-reset)))
 
 
 (defn run-bb-nrepl-server

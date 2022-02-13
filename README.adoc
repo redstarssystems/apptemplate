@@ -56,7 +56,7 @@ Example: to generate new app project for artifact `com.example/app01` run:
 
 [source, bash]
 ----
-clojure -Sdeps '{:deps {org.rssys/apptemplate {:git/tag "0.1.0" :git/sha "9e5d0e2" :git/url "https://github.com/redstarssystems/apptemplate.git"}}}' -Tnew create :template org.rssys/apptemplate :name com.example/app01
+clojure -Sdeps '{:deps {org.rssys/apptemplate {:git/tag "0.1.1" :git/sha "9e5d0e2" :git/url "https://github.com/redstarssystems/apptemplate.git"}}}' -Tnew create :template org.rssys/apptemplate :name com.example/app01
 
 ----
 or clone this project and run from its folder:

@@ -6,7 +6,7 @@
 
 {:min-bb-version "0.4.0"
 
- :deps           {local/deps {:local/root "tasks/"}}
+ :deps           {local/deps {:local/root "tasks"}}
 
  :tasks
  {:enter       (build.init/enter current-task)
