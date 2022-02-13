@@ -3,7 +3,7 @@
 == [0.1.1] - 13-02-2022
 
 - fix frozen timestamp
-- fix trailing slash in deps.edn ("tasks/" -> "tasks") cause babashka+clj.deps.tools produced strange errors
+- fix trailing slash in bb.edn ("tasks/" -> "tasks") cause babashka+clj.deps.tools produced strange errors
 
 == [0.1.0] - 05-02-2022
 
